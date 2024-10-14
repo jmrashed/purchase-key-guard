@@ -12,16 +12,7 @@
             </div>
         @endif
 
-        @if (optional($errors)->any())
-            <div class="mb-4 text-red-500 text-center">
-                <ul>
-                    @foreach (optional($errors)->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
+ 
 
         <form action="{{ route('purchase.key.validate') }}" method="POST">
             @csrf
