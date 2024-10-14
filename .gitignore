@@ -1,0 +1,36 @@
+# Laravel specific
+/vendor/
+/node_modules/
+/storage/*.key
+/.env
+/.env.*.php
+
+# Log files
+*.log
+
+# IDE specific files
+*.sublime-project
+*.sublime-workspace
+.idea/
+.vscode/
+
+# Composer specific
+composer.lock
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# PHPUnit
+.phpunit.result.cache
+
+# Coverage reports
+coverage/
+
+# Ignore any other files you want to exclude

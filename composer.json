@@ -1,0 +1,42 @@
+{
+    "name": "jmrashed/purchase-key-guard",
+    "description": "A Laravel package to protect usage via a purchase key.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rashed Zaman",
+            "email": "jmrashed@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jmrashed\\PurchaseKeyGuard\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jmrashed\\PurchaseKeyGuard\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jmrashed\\PurchaseKeyGuard\\Providers\\PurchaseKeyGuardServiceProvider"
+            ],
+            "aliases": {
+                "PurchaseKeyGuard": "Jmrashed\\PurchaseKeyGuard\\PurchaseKeyGuard"
+            }
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "orchestra/testbench": "^7.0"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
