@@ -1,15 +1,60 @@
+{{-- /Users/rashedzaman/purchase-key-guard/resources/views/purchase_key/revalidate.blade.php --}}
+
 @extends('purchase-key-guard::layouts.app')
 
-@section('title', 'Revalidate Purchase Key')
-
 @section('content')
-    <h2 class="text-2xl font-bold mb-4">Revalidation Result</h2>
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-semibold mb-4">Revalidate Purchase Key</h1>
 
-    @if($result['status'] === 'valid')
-        <div class="bg-green-500 text-white p-4 rounded mb-4">{{ $result['message'] }}</div>
-    @else
-        <div class="bg-red-500 text-white p-4 rounded mb-4">{{ $result['message'] }}</div>
-    @endif
+        {{-- Display validation errors --}}
+        @if(optional($errors)->any())
+            <div class="mb-4 text-red-500 text-center">
+                <ul>
+                    @foreach(optional($errors)->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    <a href="{{ route('purchase-key.status') }}" class="inline-block mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Check Status</a>
+        {{-- Revalidation form --}}
+        <form action="{{ url('purchase-key.revalidate.submit') }}" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            @csrf
+            <div class="mb-4">
+                <label for="purchase_code" class="block text-gray-700 text-sm font-bold mb-2">Purchase Code:</label>
+                <input type="text" id="purchase_code" name="purchase_code" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                       value="{{ old('purchase_code') }}" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="item_code" class="block text-gray-700 text-sm font-bold mb-2">Item Code:</label>
+                <input type="text" id="item_code" name="item_code" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                       value="{{ old('item_code') }}" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="domain" class="block text-gray-700 text-sm font-bold mb-2">Domain:</label>
+                <input type="url" id="domain" name="domain" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                       value="{{ old('domain') }}" required>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button type="submit" 
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Revalidate
+                </button>
+            </div>
+        </form>
+        
+        {{-- Link to installation form if not installed --}}
+        <div class="mt-6 text-center">
+            <a href="{{ url('purchase-key.install.form') }}" 
+               class="text-blue-500 hover:text-blue-700">
+                Go to Installation
+            </a>
+        </div>
+    </div>
 @endsection

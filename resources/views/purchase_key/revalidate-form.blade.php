@@ -1,17 +1,52 @@
+{{-- /Users/rashedzaman/purchase-key-guard/resources/views/purchase_key/revalidate-form.blade.php --}}
+
 @extends('purchase-key-guard::layouts.app')
 
-@section('title', 'Revalidate Purchase Key')
-
 @section('content')
-    <h2 class="text-2xl font-bold mb-4">Revalidate Your Purchase Key</h2>
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-semibold mb-4">Revalidation Form</h1>
 
-    <form action="{{ route('purchase-key.revalidate') }}" method="POST" class="bg-white p-6 rounded shadow-md">
-        @csrf
-        <div class="mb-4">
-            <label for="purchase_code" class="block text-sm font-medium text-gray-700">Purchase Code</label>
-            <input type="text" name="purchase_code" id="purchase_code" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
-        </div>
+        {{-- Display validation errors --}}
+        @if(optional($errors)->any())
+            <div class="mb-4 text-red-500 text-center">
+                <ul>
+                    @foreach(optional($errors)->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Revalidate Purchase Key</button>
-    </form>
+        {{-- Revalidation form --}}
+        <form action="{{ url('purchase-key.revalidate.submit') }}" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            @csrf
+            <div class="mb-4">
+                <label for="purchase_code" class="block text-gray-700 text-sm font-bold mb-2">Purchase Code:</label>
+                <input type="text" id="purchase_code" name="purchase_code" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                       value="{{ old('purchase_code') }}" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="item_code" class="block text-gray-700 text-sm font-bold mb-2">Item Code:</label>
+                <input type="text" id="item_code" name="item_code" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                       value="{{ old('item_code') }}" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="domain" class="block text-gray-700 text-sm font-bold mb-2">Domain:</label>
+                <input type="url" id="domain" name="domain" 
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                       value="{{ old('domain') }}" required>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button type="submit" 
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Revalidate
+                </button>
+            </div>
+        </form>
+    </div>
 @endsection
