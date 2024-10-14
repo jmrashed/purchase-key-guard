@@ -25,6 +25,7 @@ class PurchaseKeyGuardServiceProvider extends ServiceProvider
 
         // Load the package's routes
         $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
 
         // Register the package's views
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'purchase-key-guard');
