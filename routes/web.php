@@ -9,6 +9,8 @@ Route::prefix('purchase-key')->group(function () {
     // Route for showing the purchase validation form
     Route::get('/validate', [PurchaseKeyController::class, 'showValidationForm'])
         ->name('purchase-key.validate.form');
+    Route::get('/validate', [PurchaseKeyController::class, 'showValidationForm'])
+        ->name('purchase.key.validate');
 
     // Route for handling purchase validation submission
     Route::post('/validate', [PurchaseKeyController::class, 'validatePurchase'])

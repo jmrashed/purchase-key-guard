@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('purchase-key-guard::layouts.app')
 
 @section('title', 'Purchase Key Validation')
 
