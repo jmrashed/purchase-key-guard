@@ -2,6 +2,7 @@
 
 namespace Jmrashed\PurchaseKeyGuard\Providers;
 
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\ServiceProvider;
 use Jmrashed\PurchaseKeyGuard\Services\PurchaseKeyService;
 use Jmrashed\PurchaseKeyGuard\Http\Middleware\VerifyPurchaseKey;
@@ -15,6 +16,8 @@ class PurchaseKeyGuardServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        Toastr::useVite();
         // Load the package's configuration file
         $this->publishes([
             __DIR__ . '/../../config/purchase_key.php' => config_path('purchase_key.php'),

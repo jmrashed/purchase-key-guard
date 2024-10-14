@@ -9,7 +9,7 @@
 
 
         {{-- Validation form --}}
-        <form action="{{ url('purchase-key.validate.submit') }}" method="POST" class="bg-white shadow-md rounded p-6">
+        <form action="{{ route('purchase-key.validate.submit') }}" method="POST" class="bg-white shadow-md rounded p-6">
             @csrf
             <div class="mb-4">
                 <label for="purchase_code" class="block text-gray-700 text-sm font-bold mb-2">Purchase Code:</label>
