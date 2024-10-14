@@ -37,7 +37,7 @@
             </div>
             <div class="mt-4">
                 <ul class="flex space-x-4">
-                    <li><a href="{{ route('purchase-key.install') }}"
+                    <li><a href="{{ route('purchase-key.install.form') }}"
                             class="text-gray-800 dark:text-white hover:text-blue-500">Install</a></li>
                     <li><a href="{{ route('purchase-key.status') }}"
                             class="text-gray-800 dark:text-white hover:text-blue-500">Status</a></li>

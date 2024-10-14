@@ -13,7 +13,7 @@
         <div class="bg-green-500 text-white p-4 rounded mb-4">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('purchase-key.install') }}" method="POST" class="bg-white p-6 rounded shadow-md">
+    <form action="{{ route('purchase-key.install.form') }}" method="POST" class="bg-white p-6 rounded shadow-md">
         @csrf
         <div class="mb-4">
             <label for="purchase_code" class="block text-sm font-medium text-gray-700">Purchase Code</label>
