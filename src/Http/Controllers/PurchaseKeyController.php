@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Jmrashed\PurchaseKeyGuard\Services\PurchaseKeyService;
+use Brian2694\Toastr\Facades\Toastr;
 
 class PurchaseKeyController extends Controller
 {
@@ -42,7 +43,11 @@ class PurchaseKeyController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            // Redirect back with validation errors
+            foreach ($validator->errors()->all() as $error) {
+                Toastr::error($error);
+            }
+            return redirect()->back()->withInput();
         }
 
         // Validate the purchase code using the service
@@ -53,9 +58,11 @@ class PurchaseKeyController extends Controller
         );
 
         if ($result['status'] === 'valid') {
-            return redirect()->route('purchase-key.status')->with('success', 'Purchase code validated successfully.');
+            Toastr::success('Purchase code validated successfully.');
+            return redirect()->route('purchase-key.status');
         } else {
-            return redirect()->back()->withErrors(['purchase_code' => $result['message']])->withInput();
+            Toastr::error($result['message']);
+            return redirect()->back()->withInput();
         }
     }
 
@@ -84,16 +91,21 @@ class PurchaseKeyController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            foreach ($validator->errors()->all() as $error) {
+                Toastr::error($error);
+            }
+            return redirect()->back()->withInput();
         }
 
         // Revalidate the purchase code using the service
         $result = $this->purchaseKeyService->revalidatePurchaseCode($request->input('purchase_code'));
 
         if ($result['status'] === 'valid') {
-            return redirect()->route('purchase-key.status')->with('success', 'Purchase code revalidated successfully.');
+            Toastr::success('Purchase code revalidated successfully.');
+            return redirect()->route('purchase-key.status');
         } else {
-            return redirect()->back()->withErrors(['purchase_code' => $result['message']])->withInput();
+            Toastr::error($result['message']);
+            return redirect()->back()->withInput();
         }
     }
 
@@ -136,16 +148,21 @@ class PurchaseKeyController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            foreach ($validator->errors()->all() as $error) {
+                Toastr::error($error);
+            }
+            return redirect()->back()->withInput();
         }
 
         // Process the installation using the service
         $result = $this->purchaseKeyService->install($request->all());
 
         if ($result['status'] === 'success') {
-            return redirect()->route('purchase-key.status')->with('success', 'Installation completed successfully.');
+            Toastr::success('Installation completed successfully.');
+            return redirect()->route('purchase-key.status');
         } else {
-            return redirect()->back()->withErrors(['installation' => $result['message']])->withInput();
+            Toastr::error($result['message']);
+            return redirect()->back()->withInput();
         }
     }
 }
