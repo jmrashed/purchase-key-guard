@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Rashedzaman\PurchaseKeyGuard\Http\Controllers\PurchaseKeyController;
+use Jmrashed\PurchaseKeyGuard\Http\Controllers\PurchaseKeyController;
 
 // API routes for purchase key operations
 Route::prefix('purchase-keys')->group(function () {

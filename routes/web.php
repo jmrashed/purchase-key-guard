@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route; 
 use Jmrashed\PurchaseKeyGuard\Http\Controllers\PurchaseKeyController;
 
 // Route for showing the purchase validation form

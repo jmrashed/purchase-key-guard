@@ -1,6 +1,6 @@
 <?php
 
-namespace Rashedzaman\PurchaseKeyGuard\Models;
+namespace Jmrashed\PurchaseKeyGuard\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
