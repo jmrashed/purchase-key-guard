@@ -37,6 +37,6 @@
         "phpunit/phpunit": "^9.0",
         "orchestra/testbench": "^7.0"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
