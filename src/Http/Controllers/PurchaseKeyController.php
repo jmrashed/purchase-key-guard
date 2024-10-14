@@ -23,7 +23,7 @@ class PurchaseKeyController extends Controller
      */
     public function showValidationForm()
     {
-        return view('purchase-key-guard::validation-form');
+        return view('purchase-key-guard::purchase_key.validation-form');
     }
 
     /**
@@ -67,7 +67,7 @@ class PurchaseKeyController extends Controller
     public function showStatus()
     {
         $status = $this->purchaseKeyService->getCurrentStatus();
-        return view('purchase-key-guard::status', compact('status'));
+        return view('purchase-key-guard::purchase_key.status', compact('status'));
     }
 
     /**
@@ -106,7 +106,7 @@ class PurchaseKeyController extends Controller
     {
         // Retrieve logs using the service
         $logs = $this->purchaseKeyService->getLogs();
-        return view('purchase-key-guard::logs', compact('logs'));
+        return view('purchase-key-guard::purchase_key.logs', compact('logs'));
     }
 
     /**
@@ -116,7 +116,7 @@ class PurchaseKeyController extends Controller
      */
     public function showInstallation()
     {
-        return view('purchase-key-guard::installation-form');
+        return view('purchase-key-guard::purchase_key.installation-form');
     }
 
     /**
