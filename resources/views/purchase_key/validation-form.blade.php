@@ -6,16 +6,7 @@
     <div class="container mx-auto p-4">
         <h1 class="text-2xl font-semibold mb-4">Validate Purchase Key</h1>
 
-        {{-- Display validation errors if any --}}
-        @if($errors->any())
-            <div class="mb-4 text-red-500 text-center">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+
 
         {{-- Validation form --}}
         <form action="{{ url('purchase-key.validate.submit') }}" method="POST" class="bg-white shadow-md rounded p-6">
