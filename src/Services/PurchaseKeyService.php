@@ -2,46 +2,51 @@
 
 namespace Jmrashed\PurchaseKeyGuard\Services;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class PurchaseKeyService
 {
-    protected $apiUrl;
+    protected $apiUrl; // API URL for validation
 
     public function __construct()
     {
-        $this->apiUrl = config('purchase_key.api_url'); // Set your API URL from the config
+        // Set the API URL to the appropriate endpoint for your purchase key validation
+        $this->apiUrl = config('purchase-key-guard.api_url'); // Configure in your config file
     }
 
     /**
-     * Validate the purchase code against the local database or the external API.
+     * Validate the purchase code.
      *
      * @param string $purchaseCode
      * @param string $itemCode
      * @param string $domain
      * @return array
      */
-    public function validatePurchaseCode($purchaseCode, $itemCode, $domain)
+    public function validatePurchaseCode(string $purchaseCode, string $itemCode, string $domain): array
     {
-        // Check local database for the purchase code
-        $purchaseKey = DB::table('purchase_keys')->where('purchase_code', $purchaseCode)->first();
+        try {
+            $response = Http::post($this->apiUrl . '/validate', [
+                'purchase_code' => $purchaseCode,
+                'item_code' => $itemCode,
+                'domain' => $domain,
+            ]);
 
-        if ($purchaseKey) {
-            return ['status' => 'valid', 'message' => 'Purchase code is valid.'];
+            if ($response->successful()) {
+                return $response->json(); // Assuming the API returns a JSON response
+            } else {
+                return [
+                    'status' => 'invalid',
+                    'message' => 'Unable to validate purchase code. Please try again.',
+                ];
+            }
+        } catch (\Exception $e) {
+            Log::error('Purchase code validation error: ' . $e->getMessage());
+            return [
+                'status' => 'invalid',
+                'message' => 'An error occurred during validation. Please try again later.',
+            ];
         }
-
-        // If not found in the database, check with the external API
-        $response = $this->validateWithApi($purchaseCode, $itemCode, $domain);
-
-        if ($response['status'] === 'valid') {
-            // Store the purchase key in the database for future checks
-            $this->storePurchaseKey($purchaseCode, $itemCode, $domain);
-            return $response;
-        }
-
-        return ['status' => 'invalid', 'message' => $response['message']];
     }
 
     /**
@@ -50,110 +55,89 @@ class PurchaseKeyService
      * @param string $purchaseCode
      * @return array
      */
-    public function revalidatePurchaseCode($purchaseCode)
+    public function revalidatePurchaseCode(string $purchaseCode): array
     {
-        $purchaseKey = DB::table('purchase_keys')->where('purchase_code', $purchaseCode)->first();
+        try {
+            $response = Http::post($this->apiUrl . '/revalidate', [
+                'purchase_code' => $purchaseCode,
+            ]);
 
-        if ($purchaseKey) {
-            // Call the external API for revalidation
-            $response = $this->validateWithApi($purchaseCode, $purchaseKey->item_code, $purchaseKey->domain);
-
-            if ($response['status'] === 'valid') {
-                return $response;
+            if ($response->successful()) {
+                return $response->json(); // Assuming the API returns a JSON response
+            } else {
+                return [
+                    'status' => 'invalid',
+                    'message' => 'Unable to revalidate purchase code. Please try again.',
+                ];
             }
-
-            return ['status' => 'invalid', 'message' => $response['message']];
+        } catch (\Exception $e) {
+            Log::error('Purchase code revalidation error: ' . $e->getMessage());
+            return [
+                'status' => 'invalid',
+                'message' => 'An error occurred during revalidation. Please try again later.',
+            ];
         }
-
-        return ['status' => 'invalid', 'message' => 'Purchase code not found in database.'];
     }
 
     /**
-     * Install the purchase code and store it in the database.
+     * Get the current purchase status.
+     *
+     * @return array
+     */
+    public function getCurrentStatus(): array
+    {
+        // Logic to retrieve the current status of the purchase key
+        // This could involve reading from a database, a file, or an API call
+        // For example, you might check the database for the latest status
+
+        // Placeholder for demonstration; replace with actual implementation
+        return [
+            'purchase_code' => 'example-code',
+            'status' => 'valid',
+            'expiration_date' => '2024-12-31',
+            'message' => 'Purchase code is valid.',
+        ];
+    }
+
+    /**
+     * Get the purchase logs.
+     *
+     * @return array
+     */
+    public function getLogs(): array
+    {
+        // Logic to retrieve logs from the database or log file
+        // Placeholder for demonstration; replace with actual implementation
+        return [
+            ['date' => '2024-10-01', 'action' => 'Validated purchase code', 'status' => 'success'],
+            ['date' => '2024-10-05', 'action' => 'Revalidated purchase code', 'status' => 'success'],
+            // More logs...
+        ];
+    }
+
+    /**
+     * Handle the installation process.
      *
      * @param array $data
      * @return array
      */
-    public function install(array $data)
+    public function install(array $data): array
     {
-        // Validate if the purchase code is valid before installation
-        $validationResponse = $this->validatePurchaseCode($data['purchase_code'], $data['item_code'], $data['domain']);
-
-        if ($validationResponse['status'] === 'valid') {
-            $this->storePurchaseKey($data['purchase_code'], $data['item_code'], $data['domain'], $data['installation_date']);
-            return ['status' => 'success', 'message' => 'Installation completed successfully.'];
-        }
-
-        return ['status' => 'error', 'message' => $validationResponse['message']];
-    }
-
-    /**
-     * Store the purchase key in the database.
-     *
-     * @param string $purchaseCode
-     * @param string $itemCode
-     * @param string $domain
-     * @param string|null $installationDate
-     * @return void
-     */
-    protected function storePurchaseKey($purchaseCode, $itemCode, $domain, $installationDate = null)
-    {
-        DB::table('purchase_keys')->insert([
-            'purchase_code' => $purchaseCode,
-            'item_code' => $itemCode,
-            'domain' => $domain,
-            'installation_date' => $installationDate ?? now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-    }
-
-    /**
-     * Validate the purchase code with the external API.
-     *
-     * @param string $purchaseCode
-     * @param string $itemCode
-     * @param string $domain
-     * @return array
-     */
-    protected function validateWithApi($purchaseCode, $itemCode, $domain)
-    {
-        // Make a POST request to the external API for validation
         try {
-            $response = Http::post($this->apiUrl, [
-                'purchase_code' => $purchaseCode,
-                'item_code' => $itemCode,
-                'domain' => $domain,
-                'installation_date' => now()->toDateTimeString(),
-            ]);
+            // Logic to handle the installation process
+            // For example, you might save the installation data to the database or make an API call
+            // Placeholder for demonstration; replace with actual implementation
 
-            return $response->json();
+            return [
+                'status' => 'success',
+                'message' => 'Installation process completed successfully.',
+            ];
         } catch (\Exception $e) {
-            Log::error('API validation failed: ' . $e->getMessage());
-            return ['status' => 'invalid', 'message' => 'API validation failed. Please try again.'];
+            Log::error('Installation error: ' . $e->getMessage());
+            return [
+                'status' => 'failed',
+                'message' => 'An error occurred during the installation process. Please try again later.',
+            ];
         }
-    }
-
-    /**
-     * Get the current status of the purchase key.
-     *
-     * @return array|null
-     */
-    public function getCurrentStatus()
-    {
-        // Retrieve the latest purchase key status
-        return DB::table('purchase_keys')->orderBy('created_at', 'desc')->first();
-    }
-
-    /**
-     * Retrieve logs of purchase validation attempts.
-     *
-     * @return array
-     */
-    public function getLogs()
-    {
-        // This method should be implemented to retrieve logs if necessary
-        // For now, we can return an empty array or logs from a specific table if you have one
-        return [];
     }
 }

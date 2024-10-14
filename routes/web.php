@@ -3,30 +3,34 @@
 use Illuminate\Support\Facades\Route; 
 use Jmrashed\PurchaseKeyGuard\Http\Controllers\PurchaseKeyController;
 
-// Route for showing the purchase validation form
-Route::get('/purchase/validate', [PurchaseKeyController::class, 'showValidationForm'])
-    ->name('purchase.validate');
+// Prefix for purchase key related routes
+Route::prefix('purchase-key')->group(function () {
 
-// Route for handling purchase validation submission
-Route::post('/purchase/validate', [PurchaseKeyController::class, 'validatePurchase'])
-    ->name('purchase.validate.submit');
+    // Route for showing the purchase validation form
+    Route::get('/validate', [PurchaseKeyController::class, 'showValidationForm'])
+        ->name('purchase-key.validate.form');
 
-// Route for showing the installation status
-Route::get('/purchase/status', [PurchaseKeyController::class, 'showStatus'])
-    ->name('purchase.status');
+    // Route for handling purchase validation submission
+    Route::post('/validate', [PurchaseKeyController::class, 'validatePurchase'])
+        ->name('purchase-key.validate.submit');
 
-// Route for manual revalidation of purchase code
-Route::post('/purchase/revalidate', [PurchaseKeyController::class, 'revalidatePurchase'])
-    ->name('purchase.revalidate');
+    // Route for showing the installation status
+    Route::get('/status', [PurchaseKeyController::class, 'showStatus'])
+        ->name('purchase-key.status');
 
-// Route for viewing logs
-Route::get('/purchase/logs', [PurchaseKeyController::class, 'viewLogs'])
-    ->name('purchase.logs');
+    // Route for manual revalidation of purchase code
+    Route::post('/revalidate', [PurchaseKeyController::class, 'revalidatePurchase'])
+        ->name('purchase-key.revalidate.submit');
 
-// Route for installation of the package
-Route::get('/purchase/install', [PurchaseKeyController::class, 'showInstallation'])
-    ->name('purchase.install');
+    // Route for viewing logs
+    Route::get('/logs', [PurchaseKeyController::class, 'viewLogs'])
+        ->name('purchase-key.logs');
 
-// Route for handling installation process
-Route::post('/purchase/install', [PurchaseKeyController::class, 'handleInstallation'])
-    ->name('purchase.install.submit');
+    // Route for showing the installation form
+    Route::get('/install', [PurchaseKeyController::class, 'showInstallForm'])
+        ->name('purchase-key.install.form');
+
+    // Route for handling installation process
+    Route::post('/install', [PurchaseKeyController::class, 'install'])
+        ->name('purchase-key.install.submit');
+});

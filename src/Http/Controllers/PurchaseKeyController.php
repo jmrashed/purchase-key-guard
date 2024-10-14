@@ -53,7 +53,7 @@ class PurchaseKeyController extends Controller
         );
 
         if ($result['status'] === 'valid') {
-            return redirect()->route('purchase.status')->with('success', 'Purchase code validated successfully.');
+            return redirect()->route('purchase-key.status')->with('success', 'Purchase code validated successfully.');
         } else {
             return redirect()->back()->withErrors(['purchase_code' => $result['message']])->withInput();
         }
@@ -91,7 +91,7 @@ class PurchaseKeyController extends Controller
         $result = $this->purchaseKeyService->revalidatePurchaseCode($request->input('purchase_code'));
 
         if ($result['status'] === 'valid') {
-            return redirect()->route('purchase.status')->with('success', 'Purchase code revalidated successfully.');
+            return redirect()->route('purchase-key.status')->with('success', 'Purchase code revalidated successfully.');
         } else {
             return redirect()->back()->withErrors(['purchase_code' => $result['message']])->withInput();
         }
@@ -114,7 +114,7 @@ class PurchaseKeyController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function showInstallation()
+    public function showInstallForm()
     {
         return view('purchase-key-guard::purchase_key.installation-form');
     }
@@ -125,7 +125,7 @@ class PurchaseKeyController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function handleInstallation(Request $request)
+    public function install(Request $request)
     {
         // Validate the incoming request data
         $validator = Validator::make($request->all(), [
@@ -143,7 +143,7 @@ class PurchaseKeyController extends Controller
         $result = $this->purchaseKeyService->install($request->all());
 
         if ($result['status'] === 'success') {
-            return redirect()->route('purchase.status')->with('success', 'Installation completed successfully.');
+            return redirect()->route('purchase-key.status')->with('success', 'Installation completed successfully.');
         } else {
             return redirect()->back()->withErrors(['installation' => $result['message']])->withInput();
         }
