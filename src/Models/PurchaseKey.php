@@ -15,11 +15,19 @@ class PurchaseKey extends Model
 
     // Mass assignable attributes
     protected $fillable = [
-        'key',
-        'user_id',
-        'type',
+        'email',
+        'domain',
+        'purchase_code',
         'expires_at',
+        'activation_code',
+        'status',
         'is_used',
+        'activation_count',
+        'is_revoked',
+        'revoked_at',
+        'revoked_by',
+        'created_by',
+        'notes',
     ];
 
     // Casting attributes to their respective data types

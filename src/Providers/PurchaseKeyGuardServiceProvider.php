@@ -6,6 +6,8 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\ServiceProvider;
 use Jmrashed\PurchaseKeyGuard\Services\PurchaseKeyService;
 use Jmrashed\PurchaseKeyGuard\Http\Middleware\VerifyPurchaseKey;
+use Jmrashed\PurchaseKeyGuard\Models\PurchaseKey;
+use Jmrashed\PurchaseKeyGuard\Services\EnvatoService;
 
 class PurchaseKeyGuardServiceProvider extends ServiceProvider
 {
@@ -18,10 +20,13 @@ class PurchaseKeyGuardServiceProvider extends ServiceProvider
     {
 
         Toastr::useVite();
-        // Load the package's configuration file
+
+
         $this->publishes([
-            __DIR__ . '/../../config/purchase_key.php' => config_path('purchase_key.php'),
-        ], 'config');
+            __DIR__ . '/../../resources/css' => public_path('vendor/purchase-key-guard/css'),
+            __DIR__ . '/../../resources/js' => public_path('vendor/purchase-key-guard/js'),
+            __DIR__ . '/../../config/purchase-key-guard.php' => config_path('purchase-key-guard.php'),
+        ], 'public');
 
         // Load the package's migrations
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
@@ -51,15 +56,13 @@ class PurchaseKeyGuardServiceProvider extends ServiceProvider
     {
         // Bind the PurchaseKeyService to the service container
         $this->app->singleton(PurchaseKeyService::class, function ($app) {
-            return new PurchaseKeyService();
+            return new PurchaseKeyService(
+                $app->make(PurchaseKey::class),
+                $app->make(EnvatoService::class)
+            );
         });
 
         // Alias for easier access
         $this->app->alias(PurchaseKeyService::class, 'purchase-key');
-
-        // Merge package config with the application's config
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../config/purchase_key.php', 'purchase_key'
-        );
     }
 }
