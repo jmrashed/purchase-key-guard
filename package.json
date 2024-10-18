@@ -1,0 +1,16 @@
+{
+  "name": "purchase-key-guard",
+  "version": "1.0.0",
+  "description": "A Laravel package with TailwindCSS",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwindcss build resources/css/app.css -o resources/css/style.css",
+    "dev": "npm run build"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.0.0",
+    "laravel-mix": "^6.0.49",
+    "postcss": "^8.0.0",
+    "tailwindcss": "^3.0.0"
+  }
+}
