@@ -14,15 +14,31 @@ class CreatePurchaseKeysTable extends Migration
     public function up()
     {
         Schema::create('purchase_keys', function (Blueprint $table) {
-            $table->id(); // Auto-incrementing ID
-            $table->string('key')->unique(); // Unique purchase key
-            $table->unsignedBigInteger('user_id')->nullable(); // User ID (optional)
-            $table->string('type'); // Type of key (e.g., single, multi)
-            $table->timestamp('created_at')->useCurrent(); // Timestamp when the key was created
-            $table->timestamp('expires_at')->nullable(); // Expiration timestamp
-            $table->boolean('is_used')->default(false); // Track if the key has been used
-            $table->timestamps(); // created_at and updated_at
+            $table->id();
+            $table->string('email');
+            $table->string('domain')->unique();
+            $table->string('purchase_code');
+            $table->timestamp('expires_at')->nullable();
+            $table->boolean('is_used')->default(false);
+            // Advanced fields
+            $table->enum('status', ['active', 'expired', 'revoked', 'pending'])->default('active');
+            $table->string('activation_code')->unique()->nullable();
+            $table->string('used_by_ip')->nullable();
+            $table->string('used_on_device')->nullable();
+            $table->unsignedInteger('activation_count')->default(0);
+            $table->boolean('is_revoked')->default(false);
+            $table->timestamp('revoked_at')->nullable();
+            $table->unsignedBigInteger('revoked_by')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->text('notes')->nullable();
+            $table->json('item_details')->nullable();
+            $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('revoked_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
         });
+
     }
 
     /**
