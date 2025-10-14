@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Jmrashed\PurchaseKeyGuard\Exceptions\PurchaseKeyStoreException;
 use Jmrashed\PurchaseKeyGuard\Models\PurchaseKey;
 use Jmrashed\PurchaseKeyGuard\Services\EnvatoService;
 
@@ -26,12 +27,23 @@ class PurchaseKeyService
     {
         $results         = [];
         $authentications = config('purchase-key-guard.authentication');
+        $validPurchase = false;
 
         // Loop through each authentication vendor to validate the purchase code
         foreach ($authentications as $vendor) {
             if ($vendor['token'] && $vendor['status']) {
-                $result[] = $this->envatoService->verifyPurchaseCode($request->purchase_code, null, $vendor['token']);
+                $response = $this->envatoService->verifyPurchaseCode($request->purchase_code, $vendor['item_id'], $vendor['token']);
+                $results[] = $response;
+
+                if (!isset($response['error'])) {
+                    $validPurchase = true;
+                    break; // Exit loop once a valid purchase is found
+                }
             }
+        }
+
+        if (!$validPurchase) {
+            throw new PurchaseKeyStoreException(trans('purchase-key-guard::validation.purchase_key_guard.invalid_purchase_code'));
         }
 
         try {
@@ -53,7 +65,7 @@ class PurchaseKeyService
             ]);
 
         } catch (\Throwable $th) {
-            throw $th;
+            throw new PurchaseKeyStoreException(trans('purchase-key-guard::validation.purchase_key_guard.failed_to_store') . ' ' . $th->getMessage());
         }
     }
 

@@ -34,3 +34,4 @@ ehthumbs.db
 coverage/
 
 # Ignore any other files you want to exclude
+task.md

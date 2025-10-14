@@ -49,13 +49,175 @@ You can also use the provided `PurchaseKeyService` to programmatically verify pu
 
 ## Configuration
 
-You can modify the configuration by editing the `purchase_key.php` file. Here, you can set the default key, API settings, and more.
+
+
+After publishing the configuration file, you can find it at `config/purchase-key-guard.php`. This file allows you to configure the settings for the purchase key validation.
+
+
+
+### Authentication
+
+
+
+The `authentication` array allows you to configure multiple vendor accounts for Envato API validation. You can add as many accounts as you need.
+
+
 
 ```php
-return [
-    'key' => env('PURCHASE_KEY', 'your-purchase-key-here'),
-];
+
+'authentication' => [
+
+    [
+
+        'vendor' => env('PURCHASE_KEY_VENDOR_ACCOUNT1', 'Account 1'),
+
+        'token' => env('PURCHASE_KEY_TOKEN_ACCOUNT1', ''),
+
+        'item_id' => env('PURCHASE_KEY_ITEM_ID_ACCOUNT1', ''),
+
+        'status' => env('PURCHASE_KEY_STATUS_ACCOUNT1', false),
+
+    ],
+
+    // ...
+
+],
+
 ```
+
+
+
+- `vendor`: A friendly name for the vendor account.
+
+- `token`: Your Envato API personal token.
+
+- `item_id`: The ID of the item on Envato Market.
+
+- `status`: Whether this vendor account is active or not.
+
+
+
+### Activation Limit
+
+
+
+The `activation_limit` setting determines how many times a purchase key can be activated on different domains.
+
+
+
+```php
+
+'activation_limit' => env('PURCHASE_KEY_ACTIVATION_LIMIT', 1),
+
+```
+
+
+
+## Admin Interface
+
+
+
+The package includes a simple admin interface to manage purchase keys. You can access it at `/admin/purchase-keys`.
+
+
+
+The admin interface allows you to:
+
+- View all purchase keys.
+
+- Create new purchase keys.
+
+- Edit existing purchase keys.
+
+- Delete purchase keys.
+
+- Revoke purchase keys.
+
+
+
+## Artisan Commands
+
+
+
+The package includes an Artisan command to check for expired keys.
+
+
+
+### `purchase-key:check-expired`
+
+
+
+This command will check for purchase keys that have expired and update their status to `expired`.
+
+
+
+You can run it manually:
+
+```bash
+
+php artisan purchase-key:check-expired
+
+```
+
+
+
+Or schedule it to run periodically in your `app/Console/Kernel.php` file:
+
+
+
+```php
+
+protected function schedule(Schedule $schedule)
+
+{
+
+    $schedule->command('purchase-key:check-expired')->daily();
+
+}
+
+```
+
+
+
+## Events
+
+
+
+The package fires an event when a purchase key is validated: `purchase.key.validated`.
+
+
+
+You can listen for this event in your `EventServiceProvider`:
+
+
+
+```php
+
+protected $listen = [
+
+    'purchase.key.validated' => [
+
+        // Your listeners here
+
+    ],
+
+];
+
+```
+
+
+
+## Extending the Package
+
+
+
+You can extend the package by:
+
+- Creating your own views and publishing them.
+
+- Creating your own validation logic by extending the `PurchaseKeyService`.
+
+- Creating your own controllers and routes to customize the behavior of the package.
 
 ## Testing
 
@@ -68,3 +230,23 @@ composer test
 ## License
 
 The MIT License (MIT). Please see the [LICENSE](LICENSE) file for more details. 
+
+
+
+## Author
+
+**Md Rasheduzzaman**  
+Full-Stack Software Engineer & Technical Project Manager  
+
+Building scalable, secure & AI-powered SaaS platforms across ERP, HRMS, CRM, LMS, and E-commerce domains.  
+Over 10 years of experience leading full-stack teams, cloud infrastructure, and enterprise-grade software delivery.
+
+**🌐 Portfolio:** [jmrashed.github.io](https://jmrashed.github.io/)  
+**✉️ Email:** [jmrashed@gmail.com](mailto:jmrashed@gmail.com)  
+**💼 LinkedIn:** [linkedin.com/in/jmrashed](https://www.linkedin.com/in/jmrashed/)  
+**📝 Blog:** [medium.com/@jmrashed](https://medium.com/@jmrashed)  
+**💻 GitHub:** [github.com/jmrashed](https://github.com/jmrashed)
+
+---
+
+> *“Need a Reliable Software Partner? I build scalable, secure & modern solutions for startups and enterprises.”*

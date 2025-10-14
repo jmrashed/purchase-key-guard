@@ -4,6 +4,7 @@ namespace Jmrashed\PurchaseKeyGuard\Providers;
 
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\ServiceProvider;
+use Jmrashed\PurchaseKeyGuard\Commands\CheckExpiredKeys;
 use Jmrashed\PurchaseKeyGuard\Services\PurchaseKeyService;
 use Jmrashed\PurchaseKeyGuard\Http\Middleware\VerifyPurchaseKey;
 use Jmrashed\PurchaseKeyGuard\Models\PurchaseKey;
@@ -45,6 +46,12 @@ class PurchaseKeyGuardServiceProvider extends ServiceProvider
         $this->app['events']->listen('purchase.key.validated', function ($event) {
             // Handle the event (e.g., logging or notifications)
         });
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                CheckExpiredKeys::class,
+            ]);
+        }
     }
 
     /**

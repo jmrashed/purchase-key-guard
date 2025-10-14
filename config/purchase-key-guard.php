@@ -22,6 +22,7 @@ return [
         [
             'vendor' => env('PURCHASE_KEY_VENDOR_ACCOUNT1', 'Account 1'),
             'token' => env('PURCHASE_KEY_TOKEN_ACCOUNT1', ''),
+            'item_id' => env('PURCHASE_KEY_ITEM_ID_ACCOUNT1', ''),
             'status' => env('PURCHASE_KEY_STATUS_ACCOUNT1', false),
         ],
 
@@ -31,6 +32,7 @@ return [
         [
             'vendor' => env('PURCHASE_KEY_VENDOR_ACCOUNT2', 'Account 2'),
             'token' => env('PURCHASE_KEY_TOKEN_ACCOUNT2', ''),
+            'item_id' => env('PURCHASE_KEY_ITEM_ID_ACCOUNT2', ''),
             'status' => env('PURCHASE_KEY_STATUS_ACCOUNT2', false),
         ],
 
@@ -40,7 +42,10 @@ return [
         [
             'vendor' => env('PURCHASE_KEY_VENDOR_OWNER', 'Owner'),
             'token' => env('PURCHASE_KEY_TOKEN_OWNER', ''),
+            'item_id' => env('PURCHASE_KEY_ITEM_ID_OWNER', ''),
             'status' => env('PURCHASE_KEY_STATUS_OWNER', false),
         ]
-    ]
+    ],
+
+    'activation_limit' => env('PURCHASE_KEY_ACTIVATION_LIMIT', 1),
 ];

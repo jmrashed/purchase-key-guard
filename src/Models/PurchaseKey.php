@@ -28,7 +28,14 @@ class PurchaseKey extends Model
         'revoked_by',
         'created_by',
         'notes',
+        'item_details',
+        'activated_domains',
     ];
+
+    protected static function newFactory()
+    {
+        return \Jmrashed\PurchaseKeyGuard\Database\Factories\PurchaseKeyFactory::new();
+    }
 
     // Casting attributes to their respective data types
     protected $casts = [
