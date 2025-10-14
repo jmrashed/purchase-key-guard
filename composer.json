@@ -1,6 +1,7 @@
 {
     "name": "jmrashed/purchase-key-guard",
     "description": "A Laravel package to protect usage via a purchase key.",
+    "version": "1.1.0",
     "type": "library",
     "license": "MIT",
     "authors": [
