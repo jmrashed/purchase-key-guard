@@ -14,6 +14,7 @@ return [
         'validation_successful' => 'Purchase code validated successfully.',
         'revalidation_successful' => 'Purchase code revalidated successfully.',
         'invalid_purchase_code' => 'Invalid purchase code.',
+        'duplicate_purchase_code' => 'Purchase code already exists.',
         'failed_to_store' => 'Failed to store purchase key.',
         'unexpected_error' => 'An unexpected error occurred.',
         'key_created' => 'Purchase key created successfully.',
