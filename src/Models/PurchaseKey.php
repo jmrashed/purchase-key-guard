@@ -39,8 +39,13 @@ class PurchaseKey extends Model
 
     // Casting attributes to their respective data types
     protected $casts = [
-        'expires_at' => 'datetime', // Automatically cast to Carbon instance
-        'is_used' => 'boolean',      // Cast is_used to boolean
+        'expires_at' => 'datetime',
+        'revoked_at' => 'datetime',
+        'is_used' => 'boolean',
+        'is_revoked' => 'boolean',
+        'activation_count' => 'integer',
+        'activated_domains' => 'array',
+        'item_details' => 'array',
     ];
 
     /**
@@ -48,7 +53,9 @@ class PurchaseKey extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class); // Assuming you have a User model
+        $userModel = config('auth.providers.users.model', \App\Models\User::class);
+
+        return $this->belongsTo($userModel, 'created_by');
     }
 
     /**
