@@ -96,6 +96,16 @@ The `authentication` array allows you to configure multiple vendor accounts for 
 - `status`: Whether this vendor account is active or not.
 
 
+### API URL
+
+The `api_url` setting defines the base URL for external code revalidation endpoints used by `PurchaseKeyService`.
+
+```php
+
+'api_url' => env('PURCHASE_KEY_GUARD_API_URL', 'https://api.your-service.com'),
+
+```
+
 
 ### Activation Limit
 

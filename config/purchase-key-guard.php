@@ -14,6 +14,8 @@ return [
     |
     */
 
+    'api_url' => env('PURCHASE_KEY_GUARD_API_URL', 'https://api.your-service.com'),
+
     'authentication' => [
 
         /*
