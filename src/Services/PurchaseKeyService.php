@@ -46,12 +46,16 @@ class PurchaseKeyService
             throw new PurchaseKeyStoreException(trans('purchase-key-guard::validation.purchase_key_guard.invalid_purchase_code'));
         }
 
+        if ($this->model->where('purchase_code', $request->input('purchase_code'))->exists()) {
+            throw new PurchaseKeyStoreException(trans('purchase-key-guard::validation.purchase_key_guard.duplicate_purchase_code'));
+        }
+
         try {
             $this->model->create([
                 'email'            => $request->input('email'),
-                'domain'           => $request->input('domain'),
-                'purchase_code'    => $request->input('purchase_code'),
-                'expires_at'       => Carbon::now()->addYear()->format('Y-m-d H:i:s'),
+                'domain'           => strtolower(trim($request->input('domain'))),
+                'purchase_code'    => strtoupper(trim($request->input('purchase_code'))),
+                'expires_at'       => Carbon::now()->addYear(),
                 'activation_code'  => Str::random(16),
                 'status'           => 'active',
                 'is_used'          => false,
@@ -61,9 +65,8 @@ class PurchaseKeyService
                 'revoked_by'       => null,
                 'created_by'       => auth()->id(),
                 'notes'            => $request->input('notes'),
-                'item_details'     => json_encode($results ?? []),
+                'item_details'     => $results,
             ]);
-
         } catch (\Throwable $th) {
             throw new PurchaseKeyStoreException(trans('purchase-key-guard::validation.purchase_key_guard.failed_to_store') . ' ' . $th->getMessage());
         }
@@ -71,20 +74,12 @@ class PurchaseKeyService
 
     public function revalidatePurchase($request)
     {
-        try {
-            return $this->model->where("purchase_code", $request->purchase_code)->first();
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+        return $this->model->where('purchase_code', trim((string) $request->purchase_code))->first();
     }
 
     public function showStatus($code)
     {
-        try {
-            return $this->model->where("purchase_code", $code)->first();
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+        return $this->model->where('purchase_code', trim((string) $code))->first();
     }
 
     public function validatePurchaseCode(string $purchaseCode, string $itemCode, string $domain): array
