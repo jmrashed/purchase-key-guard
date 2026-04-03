@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-04-03
+
+### Added
+- `api_url` config setting for external code revalidation endpoints.
+- Duplicate purchase code validation and error message.
+- Unit tests for `PurchaseKeyService`.
+- `TestCase` base class for Orchestra Testbench testing.
+
+### Changed
+- Improved `VerifyPurchaseKey` middleware with normalized inputs, strict type checking, and transaction safety.
+- Enhanced `PurchaseKey` model with additional attribute casts (`revoked_at`, `is_revoked`, `activation_count`, `activated_domains`, `item_details`) and configurable user relation.
+- Normalized inputs in `PurchaseKeyService` (trim, lowercase domain, uppercase purchase_code).
+- Simplified `revalidatePurchase` and `showStatus` methods in service.
+- Migration schema: indexed `domain` column, unique `purchase_code`, added `activated_domains` JSON column.
+
+### Fixed
+- Expiration check now properly handles null `expires_at` using Carbon's `isPast()` method.
+- Activation domain comparison now uses strict type checking.
+
 ## [1.1.0] - 2025-10-14
 
 ### Added

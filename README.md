@@ -1,6 +1,7 @@
 # Purchase Key Guard
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/jmrashed/purchase-key-guard.svg?style=flat-square)](https://packagist.org/packages/jmrashed/purchase-key-guard)
+[![Latest Version](https://img.shields.io/github/v/tag/jmrashed/purchase-key-guard.svg?style=flat-square)](https://github.com/jmrashed/purchase-key-guard/tags)
 [![Total Downloads](https://img.shields.io/packagist/dt/jmrashed/purchase-key-guard.svg?style=flat-square)](https://packagist.org/packages/jmrashed/purchase-key-guard)
 
 ## Introduction
@@ -15,6 +16,9 @@
 - Customizable via configuration file.
 - Integration with Laravel service providers and facades.
 - Includes artisan commands for key management.
+- Duplicate purchase code prevention.
+- Configurable API URL for external revalidation.
+- Comprehensive unit tests.
 
 ## Installation
 
