@@ -16,8 +16,8 @@ class CreatePurchaseKeysTable extends Migration
         Schema::create('purchase_keys', function (Blueprint $table) {
             $table->id();
             $table->string('email');
-            $table->string('domain')->unique();
-            $table->string('purchase_code');
+            $table->string('domain')->index();
+            $table->string('purchase_code')->unique();
             $table->timestamp('expires_at')->nullable();
             $table->boolean('is_used')->default(false);
             // Advanced fields
@@ -32,6 +32,7 @@ class CreatePurchaseKeysTable extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->text('notes')->nullable();
             $table->json('item_details')->nullable();
+            $table->json('activated_domains')->nullable();
             $table->timestamps();
 
             // Foreign key constraints
